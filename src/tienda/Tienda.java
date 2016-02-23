@@ -40,6 +40,7 @@ public class Tienda {
                             +"\n2. Para añadir un vendedor."
                             +"\n3. Para saber las ventas del día."
                             +"\n4. Para determinar las ventas de x vendedor."
+                            +"\n5. Para conocer la mayor venta con tarjeta."
                             +"\n0. Para cambiar de rol.");
                 eleccion2 = leer.nextInt();
             
@@ -64,12 +65,14 @@ public class Tienda {
                     case 3:
                         System.out.println("El valor total de las ventas en el dia es: " + valorTotal
                                 +" y el numero de ventas realizadas son: "+num_venta);
-                        
                         break;
                         
                     case 4:
-                        evaluarVenta(facturas);
+                        evaluarVenta(facturas, num_venta);
+                        break;
                         
+                    case 5:
+                        ventasTarjeta(facturas, num_venta);
                         break;
                     case 0:
                         break;
@@ -246,7 +249,7 @@ public class Tienda {
         System.out.println(facturas[11][num_venta]);
     }
     
-    public static void evaluarVenta(String[][] facturas){
+    public static void evaluarVenta(String[][] facturas, int num_venta){
         java.util.Scanner leer = new java.util.Scanner(System.in);
         String id, codigoProducto;
         
@@ -256,15 +259,34 @@ public class Tienda {
         System.out.println("Digite el codigo del producto que desea consultar.");
         codigoProducto = leer.next();
         
-        for (int i=0; i<300; i++){
+        for (int i=0; i<num_venta; i++){
             if (facturas[2][i].equals(id)){
                 if (facturas[5][i].equals(codigoProducto)){
                     imprimirFactura(facturas, i);
-                }   
+                }
             }
             else{
                 System.out.println("El vendedor consultado no realizo ninguna venta.");
             }
         }
     }
+    
+    public static void ventasTarjeta(String[][] facturas, int num_venta){
+        int valorMayor=0;
+        
+        for (int i=0; i<num_venta; i++){
+            if (facturas[8][i].equals("Tarjeta")){
+                if (Integer.parseInt(facturas[10][i])>valorMayor){
+                    valorMayor=Integer.parseInt(facturas[10][i]);
+                }
+            }
+        }
+        
+        for (int j=0; j<num_venta; j++){
+            if(facturas[10][j].equals(valorMayor)){
+                imprimirFactura(facturas, j);
+            }
+        }
+    }
+
 }
