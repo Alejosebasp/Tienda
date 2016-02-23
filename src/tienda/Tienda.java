@@ -17,14 +17,15 @@ public class Tienda {
     public static void main(String[] args) {
         java.util.Scanner leer = new java.util.Scanner(System.in);
         
-        int eleccion1=0, eleccion2=0, eleccion3=0;
-        int valorVenta, totalProductos, valorProducto, descuento;
-                
-        String[][] totalProd = new String[3][];
-        String[][] vendedores = new String[3][];
-        String[][] ventas = new String[5][200];
+        int eleccion1=0, eleccion2=0, eleccion3=0, num_prod=0;
+        int valorVenta, valorTotal=0, totalProductos, valorProducto=0, descuento;
+        int num_venta=0, num_vend;
+        int a =0, b=0;
         
-        int num_venta=0;
+        String[][] totalProd = new String[3][200];
+        String[][] vendedores = new String[3][50];
+        String[][] ventas = new String[5][300];    
+        String[][] facturas = new String[12][300];
         
         do{
         System.out.println("Seleccione"
@@ -38,29 +39,38 @@ public class Tienda {
                             +"\n1. Para ver y añadir un productos."
                             +"\n2. Para añadir un vendedor."
                             +"\n3. Para saber las ventas del día."
+                            +"\n4. Para determinar las ventas de x vendedor."
                             +"\n0. Para cambiar de rol.");
                 eleccion2 = leer.nextInt();
             
                 switch (eleccion2){
                     case 1:{                        
                         System.out.println("Digite el numero de productos que desea agregar");
-                        int num_prod = leer.nextInt();
+                        num_prod = leer.nextInt();
                         
-                        String[][] productos = new String[3][num_prod];                        
-                        productos = agregarProducto(productos, num_prod);
-                        totalProd = productos;
-                        imprimirProductos(totalProd, num_prod);
+                        totalProd = agregarProducto(totalProd, num_prod, a);
+                        a=a+num_prod;
+                        imprimirProductos(totalProd, a);
                     break;}
                     
                     case 2:
                         System.out.println("Digite el numero de vendedores que desea agregar");
-                        int num_vend = leer.nextInt();
+                        num_vend = leer.nextInt();
                         
-                        String[][] vendedor = new String[3][num_vend];                        
-                        vendedor = agregarVendedor(vendedor, num_vend);
-                        vendedores = vendedor;
-                                                
-                    break;    
+                        vendedores = agregarVendedor(vendedores, num_vend, b);
+                        b=b+num_vend;
+                    break;
+                    
+                    case 3:
+                        System.out.println("El valor total de las ventas en el dia es: " + valorTotal
+                                +" y el numero de ventas realizadas son: "+num_venta);
+                        
+                        break;
+                        
+                    case 4:
+                        evaluarVenta(facturas);
+                        
+                        break;
                     case 0:
                         break;
             }
@@ -80,10 +90,18 @@ public class Tienda {
                         descuento = leer.nextInt();
                         
                         totalProductos = Integer.parseInt(ventas[3][num_venta]);
-                        valorProducto = Integer.parseInt(ventas[1][num_venta]);
-                        valorVenta = ((valorProducto - ((valorProducto*descuento)/(100)))*totalProductos);
                         
-                        imprimirFactura(ventas, num_venta, valorProducto, valorVenta, descuento);
+                        for (int k=0; k<a; k++){
+                            if (ventas[2][num_venta].equals(totalProd[0][k]) ){
+                                valorProducto = Integer.parseInt(totalProd[1][k]);
+                                break;
+                            }
+                        }
+                                                
+                        valorVenta = ((valorProducto - ((valorProducto*descuento)/(100)))*totalProductos);
+                        valorTotal = valorTotal+valorVenta;
+                        facturas = crearFactura(ventas, num_venta, valorProducto, valorVenta, descuento, vendedores, facturas);
+                        imprimirFactura(facturas, num_venta);
                         
                         num_venta=num_venta+1;
                     break;
@@ -92,17 +110,15 @@ public class Tienda {
                         break;
                 }
             break;}
-        }       
-            
-        }
-        while(eleccion1!=0);
+            } 
+        } while(eleccion1!=0);
     }
     
     public static void imprimirProductos(String[][] matriz, int columna ){
         
         System.out.print("Codigo:     ");
         for (int i=0; i<columna; i++){            
-            System.out.print(" "+matriz[0][i]+" ");
+            System.out.print("  "+matriz[0][i]+"  ");
         }
         System.out.println("");
         System.out.print("Precio:     ");
@@ -118,39 +134,38 @@ public class Tienda {
         System.out.println("");
     }
     
-    public static String[][] agregarProducto (String[][] productos, int num_prod){
+    public static String[][] agregarProducto (String[][] productos, int num_prod, int a){
         java.util.Scanner leer = new java.util.Scanner(System.in);
         
-        
-        for (int i=0; i<num_prod; i++){
+        for (int i=a; i<(num_prod+a); i++){
             
-                System.out.println("Digite el codigo del producto "+(i+1)+".");                
-                productos[0][i]= leer.nextLine();
-                
-                System.out.println("Digite el valor del producto "+(i+1)+".");
-                productos[1][i]= leer.nextLine();
-                
-                System.out.println("Digite la descripcion del producto "+(i+1)+".");
-                productos[2][i]= leer.nextLine();
+            System.out.println("Digite el codigo del producto "+(i+1)+".");                
+            productos[0][i]= leer.nextLine();
+
+            System.out.println("Digite el valor del producto "+(i+1)+".");
+            productos[1][i]= leer.nextLine();
+
+            System.out.println("Digite la descripcion del producto "+(i+1)+".");
+            productos[2][i]= leer.nextLine();
         }
         
         return productos;
     }
     
     
-    public static String[][] agregarVendedor (String[][] vendedores, int num_vend){
+    public static String[][] agregarVendedor (String[][] vendedores, int num_vend, int b){
         java.util.Scanner leer = new java.util.Scanner(System.in);        
         
-        for (int i=0; i<num_vend; i++){
+        for (int i=b; i<(b+num_vend); i++){
             
-                System.out.println("Digite el id del vendedor "+(i+1)+".");                
-                vendedores[0][i]= leer.nextLine();
-                
-                System.out.println("Digite el nombre del vendedor "+(i+1)+".");
-                vendedores[1][i]= leer.nextLine();
-                
-                System.out.println("Digite el apellido del vendedor "+(i+1)+".");
-                vendedores[2][i]= leer.nextLine();
+            System.out.println("Digite el id del vendedor "+(i+1)+".");                
+            vendedores[0][i]= leer.nextLine();
+
+            System.out.println("Digite el nombre del vendedor "+(i+1)+".");
+            vendedores[1][i]= leer.nextLine();
+
+            System.out.println("Digite el apellido del vendedor "+(i+1)+".");
+            vendedores[2][i]= leer.nextLine();
         }        
         return vendedores;
     }
@@ -158,44 +173,15 @@ public class Tienda {
     public static String [][] registrarVenta(String[][] ventas, String[][] vendedores, String[][] totalProd, int num_venta){
         java.util.Scanner leer = new java.util.Scanner(System.in);
 
-        System.out.println("Digite la fecha y hora de la venta(d/m/a hora) "+(num_venta+1)+".");                
+        System.out.println("Digite la fecha y hora de la venta (d/m/a hora) "+(num_venta+1)+".");                
         ventas[0][num_venta]= leer.nextLine();
 
-        System.out.println("Digite el id del vendedor");
-        String id = leer.nextLine();
-        
-        int e=1;
-        while(e==1){
-        for (int i=0; i<vendedores.length; i++){
-            for (int j=0; i<vendedores[i].length; j++){
-                if (vendedores[i][j].equals(id)){
-                    ventas[1][num_venta]= id;
-                    e=0;
-                }                
-            }            
-        }
-        
-        if (e==1){
-                System.out.print("El id del vendedor registrado no existe.");
-            }        
-        }        
+        System.out.println("Digite el id del vendedor.");
+        ventas[1][num_venta]=leer.nextLine();
         
         System.out.println("Digite el codigo del producto.");
+        ventas[2][num_venta]= leer.nextLine();
         
-        while(e==0){
-            for (int c=0; c<totalProd.length; c++){
-                for (int d=0; d<totalProd[c].length; d++){
-                    if (totalProd[c][d].equals(leer.next())){
-                        ventas[2][num_venta]= leer.nextLine();
-                        e=1;
-                    }                    
-                }
-            }
-            if (e==0){
-                System.out.println("El produto ingresado no existe.");
-            }            
-        }
-
         System.out.println("Digite la cantidad del producto.");
         ventas[3][num_venta]= leer.nextLine();
         
@@ -216,18 +202,69 @@ public class Tienda {
         return ventas;
     }
     
-    public static void imprimirFactura(String[][] ventas, int num_venta, int valorProducto, int valorVenta, int descuento){
+    public static String[][] crearFactura(String[][] ventas, int num_venta, 
+            int valorProducto, int valorVenta, int descuento, String[][] vendedores, String[][] facturas){
         
-        System.out.println("Fecha: " + ventas[0][num_venta]);
-        System.out.println("");
-        System.out.println("Vendedor: " + ventas[1][num_venta]);
-        System.out.println("");
-        System.out.println("Codigo del producto: " + ventas[2][num_venta]);  
-        System.out.println("Valor unitario del producto: "+ valorProducto);
-        System.out.println("Cantidad del producto: " + ventas[3][num_venta]);
-        System.out.println("Foma de pago: " + ventas[4][num_venta]);
-        System.out.println("Descuento: "+descuento+"%");
-        System.out.println("Valor total de la venta: "+valorVenta);
+        facturas[0][num_venta] = String.valueOf(num_venta+1);
+        facturas[1][num_venta] = ventas[0][num_venta];            
         
+        for (int h=0; h<50; h++){
+            if (ventas[1][num_venta].equals(vendedores[0][h])){
+                facturas[2][num_venta] = vendedores[0][h];
+                facturas[3][num_venta] = vendedores[1][h];
+                facturas[4][num_venta] = vendedores[2][h];
+            }
+        }
+        
+        facturas[5][num_venta] = ventas[2][num_venta];     
+        facturas[6][num_venta] = String.valueOf(valorProducto);    
+        facturas[7][num_venta] = ventas[3][num_venta];    
+        facturas[8][num_venta] = ventas[4][num_venta];    
+        facturas[9][num_venta] = String.valueOf(descuento);    
+        facturas[10][num_venta] = String.valueOf(valorVenta);    
+        facturas[11][num_venta] = " ";
+        
+        return facturas;        
+    }
+    
+    public static void imprimirFactura(String[][] facturas, int num_venta){
+        
+        System.out.println(facturas[11][num_venta]);
+        System.out.println("Factura de venta N° "+facturas[0][num_venta]);
+        System.out.println("Fecha: " + facturas[1][num_venta]);
+        System.out.println(facturas[11][num_venta]);
+        System.out.println("Id del vendedor: " + facturas[2][num_venta]);
+        System.out.println("Nombre del vendedor: " + facturas[3][num_venta]);
+        System.out.println("Apellido del vendedor: " + facturas[4][num_venta]);
+        System.out.println(facturas[11][num_venta]);
+        System.out.println("Codigo del producto--------- " + facturas[5][num_venta]);
+        System.out.println("Valor unitario del producto- " + facturas[6][num_venta]);
+        System.out.println("Cantidad del producto------- " + facturas[7][num_venta]);
+        System.out.println("Foma de pago---------------- " + facturas[8][num_venta]);
+        System.out.println("Descuento------------------- " + facturas[9][num_venta] +"%");
+        System.out.println("Valor total de la venta----- " + facturas[10][num_venta]);
+        System.out.println(facturas[11][num_venta]);
+    }
+    
+    public static void evaluarVenta(String[][] facturas){
+        java.util.Scanner leer = new java.util.Scanner(System.in);
+        String id, codigoProducto;
+        
+        System.out.println("Digite el id del vendedor que desea buscar.");
+        id = leer.next();
+        
+        System.out.println("Digite el codigo del producto que desea consultar.");
+        codigoProducto = leer.next();
+        
+        for (int i=0; i<300; i++){
+            if (facturas[2][i].equals(id)){
+                if (facturas[5][i].equals(codigoProducto)){
+                    imprimirFactura(facturas, i);
+                }   
+            }
+            else{
+                System.out.println("El vendedor consultado no realizo ninguna venta.");
+            }
+        }
     }
 }
