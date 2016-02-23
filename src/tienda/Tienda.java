@@ -41,6 +41,7 @@ public class Tienda {
                             +"\n3. Para saber las ventas del día."
                             +"\n4. Para determinar las ventas de x vendedor."
                             +"\n5. Para conocer la mayor venta con tarjeta."
+                            +"\n6. Para ver el listado de las ventas por débito."
                             +"\n0. Para cambiar de rol.");
                 eleccion2 = leer.nextInt();
             
@@ -74,7 +75,13 @@ public class Tienda {
                     case 5:
                         ventasTarjeta(facturas, num_venta);
                         break;
+                    case 6:
+                        ventasDebito(facturas, num_venta);
+                        break;
                     case 0:
+                        break;
+                    default :
+                        System.out.println("El valor ingresado no es correcto.");
                         break;
             }
         break;}
@@ -110,6 +117,9 @@ public class Tienda {
                     break;
                     
                     case 0:
+                        break;
+                    default :
+                        System.out.println("El valor ingresado no es correcto.");
                         break;
                 }
             break;}
@@ -283,10 +293,26 @@ public class Tienda {
         }
         
         for (int j=0; j<num_venta; j++){
-            if(facturas[10][j].equals(valorMayor)){
+            if(Integer.parseInt(facturas[10][j])==(valorMayor)){
+            
                 imprimirFactura(facturas, j);
             }
         }
     }
 
+    public static void vendedorMayor(String[][] facturas, int num_venta){
+        
+        
+        
+    }
+
+    public static void ventasDebito(String[][] facturas, int num_venta){
+        
+        for (int i=0; i<num_venta; i++){
+            if (facturas[8][i].equals("Debito")){
+                System.out.println("Id vendedor: "+facturas[2][i]+", venta debito, "+"valor total de la venta: "
+                        +facturas[10][i]);
+            }
+        }
+    }
 }
