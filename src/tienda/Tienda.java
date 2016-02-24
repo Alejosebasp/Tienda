@@ -45,6 +45,7 @@ public class Tienda {
                             +"\n4. Para determinar las ventas de x vendedor."
                             +"\n5. Para conocer la mayor venta con tarjeta."
                             +"\n6. Para ver el listado de las ventas por débito."
+                            +"\n7. Para conocer el vendedor con mas ventas."
                             +"\n0. Para cambiar de rol.");
                 eleccion2 = leer.nextInt();
             
