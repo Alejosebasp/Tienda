@@ -23,7 +23,10 @@ public class Tienda {
         int a =0, b=0;
         
         String[][] totalProd = new String[3][200];
-        String[][] vendedores = new String[3][50];
+        String[][] vendedores = new String[4][50];
+        for(int k=0; k<50; k++){
+            vendedores[3][k]="0";
+        }
         String[][] ventas = new String[5][300];    
         String[][] facturas = new String[12][300];
         
@@ -77,6 +80,10 @@ public class Tienda {
                         break;
                     case 6:
                         ventasDebito(facturas, num_venta);
+                        break;
+                        
+                    case 7:
+                        vendedorMayor(vendedores, b);
                         break;
                     case 0:
                         break;
@@ -226,6 +233,7 @@ public class Tienda {
                 facturas[2][num_venta] = vendedores[0][h];
                 facturas[3][num_venta] = vendedores[1][h];
                 facturas[4][num_venta] = vendedores[2][h];
+                vendedores[3][h] = String.valueOf(1+(Integer.parseInt(vendedores[3][h])));
             }
         }
         
@@ -300,9 +308,24 @@ public class Tienda {
         }
     }
 
-    public static void vendedorMayor(String[][] facturas, int num_venta){
+    public static void vendedorMayor(String[][] vendedores, int num_vendedores){
+        int ven_may=0;
         
+        for (int i=0; i<num_vendedores; i++){
+            if (Integer.parseInt(vendedores[3][i])>ven_may){
+                ven_may = Integer.parseInt(vendedores[3][i]);
+            }            
+        }
         
+        for (int j=0; j<num_vendedores; j++){
+            if (Integer.parseInt(vendedores[3][j])==ven_may){
+                System.out.println("El vendedor con mayor numero de ventas es:");
+                System.out.println("ID:       "+vendedores[0][j]);
+                System.out.println("Nombre:   "+vendedores[1][j]);
+                System.out.println("Apellido: "+vendedores[2][j]);
+                System.out.println("Numero de ventas registradas: "+vendedores[3][j]);
+            }
+        }
         
     }
 
